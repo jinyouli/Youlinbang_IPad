@@ -1,0 +1,122 @@
+/* 
+  Localizable.strings
+  MasgetOnlineBusiness
+
+  Created by yejingtao on 16/12/6.
+  Copyright © 2016年 Masget. All rights reserved.
+*/
+"error.noUsername"="请输入用户名";
+"error.noPassword"="请输入密码";
+"error.noFee"="请输入运费";
+"error.noReason"="请输入异常原因";
+"error.noOrderCode"="请输入订单编号";
+"error.unCheck"="请先校验订单";
+"error.noPhone"="请输入手机号码";
+"error.noSource"="请输入起点";
+"error.noTarget"="请输入终点";
+
+
+
+"index.order"="订单";
+"index.scan"="扫一扫";
+"index.transferAccount"="转账";
+"index.creditCard"="信用卡还款";
+"index.business"="业务处理";
+
+"payway.wechat"="微信";
+"payway.alipay"="支付宝";
+"payway.pos"="刷卡";
+"payway.unionPay"="银联二维码";
+"payway.unionOnline"="银联在线";
+
+
+"orderState.unPick" = "待提货";
+"orderState.unSign" = "待签收";
+"orderState.signed" = "已签收";
+"orderState.exception" = "异常签收";
+
+"order.paid" = "支付完成";
+"order.unPaid" = "待支付";
+"order.closed"="已关闭";
+"order.cancel"="交易撤销";
+"order.tradeFail"="交易失败";
+"order.waitSure"="待确认";
+"order.refund"="已退货";
+"order.all"="全部记录";
+
+"yes" = "是";
+"no" = "否";
+
+"alert.title.fee" = "请输入运费";
+"alert.ok"="确定";
+"alert.cancel"="取消";
+
+
+"error.canNotResolveAddress" = "无法解析地址";
+"error.canNotFoundResult" = "无法找到有效路线";
+"error.emptyAddress" = "请先输入起点及终点";
+"error.emptyAmount"="请输入大于0的金额";
+"error.noCompanyId"="缺少公司id";
+"error.noOrderCode"="缺少订单唯一码";
+
+"order.defaultDescription"="供应链商品";
+
+"tradetype.collect" = "现场收款";
+"tradeType.pay"="付款";
+"tradeType.recharge"="预付款账户充值";
+"tradeType.platformRecharge"="平台月充值";
+
+"payType.pos"="刷卡";
+"payType.wechatCode"="微信扫码支付";
+"payType.alipayCode"="支付宝扫码支付";
+"payType.wechatScan"="微信条码支付";
+"payType.alipayScan"="支付宝条码支付";
+"payType.union2C" = "银联在线(B2C)";
+
+"hint.wechat"="微信扫一扫，向我付款";
+"hint.alipay"="支付宝扫一扫，向我付款";
+"hint.unionpay"="收款二维码";
+
+"wait.default"="请稍候";
+"info.waitFinish"="待开发，请期待以后的版本";
+
+"success.pay"="支付成功";
+"alert.title.update"="有更新的版本，请问是否要更新？";
+"orderCell.paidTitle"="已支付:";
+"orderCell.unpaidTitle"="需支付:";
+"orderCell.address"="地址:";
+"orderCell.handle"="处理:";
+
+"collection.title"="收款";
+"collection.orderNumPlaceHolder"="请输入或扫描订单";
+"collection.amountPlaceHolder"="请输入收款金额";
+
+"personal.bankCard"="银行卡";
+"personal.publicAccount"="对公账户";
+"personal.amount"="平台余额";
+"personal.submitPay"="预付款";
+"personal.tradeHistory"="交易记录";
+"personal.tradeCount"="交易统计";
+"personal.blanceAccount"="对账";
+"personal.transactionFlow"="交易流水";
+"personal.wallect"="钱包";
+"personal.companyWallect"="企业钱包";
+"personal.loan"="贷款";
+"personal.connections"="人脉";
+"personal.message"="消息";
+"personal.companyInfo"="公司";
+
+"personal.setting.initKey"="初始化公钥";
+"personal.setting.initDevice"="终端初始化";
+"personal.setting.myDevice"="我的设备";
+"personal.setting.checkUpdate"="检查更新";
+"personal.setting.share"="分享";
+
+"personal.accountInfo.companyName"="公司名称";
+"personal.accountInfo.staff"="员工名称";
+"personal.accountInfo.State"="公司站点";
+
+"personal.accountInfo.payPassword"="支付密码";
+"personal.accountInfo.loginPassword"="登录密码";
+"personal.accountInfo.personalQRCode"="我的二维码";
+"personal.accountInfo.about"="关于";

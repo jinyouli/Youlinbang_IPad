@@ -1,0 +1,114 @@
+//
+//  PrefixHeader.pch
+//  YLB_IPAD
+//
+//  Created by jinyou on 2017/6/26.
+//  Copyright © 2017年 com.jinyou. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* PrefixHeader_pch */
+
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#endif
+
+#define LC ([LinphoneManager getLc])
+
+#import "SYAppConfig.h"
+#import "SYNotificationMacro.h"
+#import "SYConstURLMarco.h"
+#import "SDAutoLayout.h"
+#import "NSString+SizeFont.h"
+#import "FrameManager.h"
+#import "SYLinphoneManager.h"
+#import "SYLoginInfoModel.h"
+#import "NSDictionary+Json.h"
+#import "Common.h"
+#import "MJExtension.h"
+#import "DoorListTableViewCell.h"
+#import "SYCommunityHttpDAO.h"
+#import "SYLoginHttpDAO.h"
+#import "SYPersonalSpaceHttpDAO.h"
+#import "UIImageView+WebCache.h"
+#import "QRCodeViewController.h"
+#import "MainViewController.h"
+#import "HBLockSliderView.h"
+#import "SYAppConfig.h"
+#import "SYPasswordOpenGuardViewController.h"
+#import "AppDelegate.h"
+#import "SYWebPageCtrl.h"
+#import "SYCustomScrollView.h"
+#import "SYDiscoverCommunityNewsView.h"
+#import "SYDiscoverAppCommandView.h"
+#import "SYDiscoverCommunityNewsTableViewCell.h"
+#import "SYHomeBannerTableViewCell.h"
+#import "SYVideoClearTableViewCell.h"
+#import "GeTuiSdk.h"
+#import "SYSettingTableViewCell.h"
+#import "SYMyMessageDetailViewController.h"
+#import "EmptyView.h"
+#import "MBProgressHUD.h"
+#import "SYFeedbackViewController.h"
+#import "SYTextDescriptionViewController.h"
+#import <CommonCrypto/CommonCryptor.h>
+#import "YLB_IPAD-Swift.h"
+#import "SYNothingCell.h"
+#import "SYInComingCallViewController.h"
+#import "SYGuardMonitorViewController.h"
+
+#define WEAK_SELF __weak __typeof(&*self)weakSelf = self
+
+#define LC ([LinphoneManager getLc])
+
+#define commonCryptKey  @"f5c220eb03f901835e2d0ed6" //密钥
+
+/*
+#define ABOVE_IOS10 ([UIDevice currentDevice].systemVersion.floatValue >= 10)
+ */
+
+//门锁的高度
+#define SYHomeGuardTableViewCellCellHeight 400
+
+#define ABOVE_IOS8 ([UIDevice currentDevice].systemVersion.floatValue >= 8)
+#define iOS8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+
+//UIColorFromRGB(0xebebeb)  0xd1d1d1
+#define underLineColor [UIColor colorWithRed:219.0/255.0f green:219.0/255.0f blue:219.0f/255.0f alpha:1.0f]
+
+//直接使用16进制颜色  0xebebeb
+#define UIColorFromRGB(rgbValue) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define screenWidth [UIScreen mainScreen].bounds.size.width
+#define screenHeight [UIScreen mainScreen].bounds.size.height
+
+#define SYNOTICE_MESSAGE_NOTIFICATION_CHANGE     @"sy_message_Notification_change"  //通知中心的开关状态更改通知
+
+// iOS10 及以上需导入 UserNotifications.framework
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+#import <UserNotifications/UserNotifications.h>
+#endif
+
+#define cellWidth screenWidth * 0.7
+
+//#define dockWidth 120
+#define dockWidth screenWidth * 0.2
+
+#ifdef DEBUG
+#define NSLog(...) NSLog(__VA_ARGS__);
+#else
+#define NSLog(...)
+#endif
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+//#endif /* PrefixHeader_pch */
