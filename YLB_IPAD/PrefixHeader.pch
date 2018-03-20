@@ -21,6 +21,9 @@
 
 #define LC ([LinphoneManager getLc])
 
+#import "SYHomeCollectionViewHeaderCollectionReusableView.h"
+#import "SYAdpublishModel.h"
+#import "SYLockListModel.h"
 #import "SYAppConfig.h"
 #import "SYNotificationMacro.h"
 #import "SYConstURLMarco.h"

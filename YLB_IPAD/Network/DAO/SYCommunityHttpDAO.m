@@ -469,7 +469,7 @@
         
         if (responseInfo.code == SYResponseSuccessCode) {
             
-            NSArray *model = [SYRecommendModel mj_objectArrayWithKeyValuesArray:responseInfo.result];
+            NSArray *model = [SYAdpublishModel mj_objectArrayWithKeyValuesArray:responseInfo.result];
             if (successBlock) {
                 successBlock(model);
             }

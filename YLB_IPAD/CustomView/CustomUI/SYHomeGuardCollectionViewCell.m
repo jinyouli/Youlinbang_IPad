@@ -98,7 +98,7 @@
     [self.contentView addSubview:self.addGuardIconImgView];
 
     self.guardAddLab = [[UILabel alloc] initWithFrame:CGRectMake(self.addGuardIconImgView.right_sd, 0, self.width_sd - self.addGuardIconImgView.right_sd, 30)];
-    self.guardAddLab.text = @"添加快捷门锁";
+    self.guardAddLab.text = @"添加门锁";
     self.guardAddLab.textAlignment = NSTextAlignmentCenter;
     self.guardAddLab.textColor = [UIColor darkGrayColor];
     self.guardAddLab.font = [UIFont systemFontOfSize:15.0];
@@ -227,8 +227,6 @@
     if (slider.value < 0.5) {
         return;
     }
-    
-    //[Common showAlert:@"已发送解锁请求"];
     
     SYCommunityHttpDAO *communityHttpDAO = [[SYCommunityHttpDAO alloc] init];
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970] * 1000;

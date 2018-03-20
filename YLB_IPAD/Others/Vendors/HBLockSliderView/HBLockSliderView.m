@@ -262,7 +262,6 @@
         return;
     }
     CGPoint __block point = [touch locationInView:self];
-    NSLog(@"订单==%f",point.x);
     if ([self.delegate respondsToSelector:@selector(sliderEndValueChanged:)]) {
         [self.delegate sliderEndValueChanged:self];
     }

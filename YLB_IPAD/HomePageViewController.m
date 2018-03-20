@@ -21,6 +21,9 @@
 #import "DoorListViewController.h"
 #import "CommunityListView.h"
 #import "AppDelegate.h"
+#import "SYHomeGuardCollectionViewCell.h"
+#import "SYHomeBannerCollectionViewCell.h"
+#import "SYHomeCommandMessageCollectionViewCell.h"
 
 typedef enum : NSUInteger {
     headerClickTag = 0,
@@ -31,11 +34,15 @@ typedef enum : NSUInteger {
     moreNews
 } BtnClickTag;
 
-@interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource,SYHomeGuardTableViewCellDelegate>{
+static NSString *const HomeBannerCollectionViewCellID = @"SYHomeBannerCollectionViewCellID";
+static NSString *const HomeGuardCollectionViewCellID = @"SYHomeGuardCollectionViewCellID";
+static NSString *const headerId = @"headerId";
+static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandMessageCollectionViewCellID";
+
+@interface HomePageViewController ()<UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate,SYHomeGuardTableViewCellDelegate>{
     dispatch_source_t _timer;
 }
 
-@property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSMutableArray *adverMarr;    //广告
 @property (nonatomic, retain) NSMutableArray *todayNewsModelMArr;    //社区头条
 @property (nonatomic,strong) MBProgressHUD *progressHud;
@@ -53,7 +60,6 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, strong) UIButton *localCommunityBtn;
 @property (nonatomic, strong) UIImageView *localCommunityImgView;
-
 @property (nonatomic, strong) DoorListViewController *menuVC;
 @property (nonatomic,strong) AffineDrawer *drawer;
 @property (nonatomic, strong) UIView *titleView;
@@ -62,8 +68,10 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) SYNeiIPListModel *model;
 @property (nonatomic, strong) SYPasswordOpenGuardViewController *passwordVC;
 @property (nonatomic, strong) SYWebPageCtrl *webCtrl;
-
 @property (nonatomic, strong) UIControl *backMask;
+
+@property (nonatomic, retain) UICollectionViewFlowLayout *collectionViewFlowLayout;
+@property (nonatomic, retain) UICollectionView *collectionView;
 @end
 
 @implementation HomePageViewController
@@ -91,18 +99,8 @@ typedef enum : NSUInteger {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [delegate.window.rootViewController.view addSubview:self.backMask];
 
-    self.tableView = [[UITableView alloc] init];
-    self.tableView.backgroundColor = UIColorFromRGB(0xebebeb);
-    [self.tableView setDelaysContentTouches:NO];
-    [self.tableView setCanCancelContentTouches:NO];
-    
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.view addSubview:self.tableView];
-    
     [self setTitleView];
+    [self initCollectionView];
     
     self.progressHud = [[MBProgressHUD alloc] initWithView:self.view];
     self.progressHud.mode = MBProgressHUDModeIndeterminate;
@@ -143,18 +141,32 @@ typedef enum : NSUInteger {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil ];
     
-    self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        
-        [self getRecommedList];
-        [self getADpublishList];
-    }];
-    
-    [self.tableView.mj_header setFrame:CGRectMake(-140, 0, 120, 50)];
-    
     [self getRecommedList];
     [self getADpublishList];
     
     [self.view addSubview:self.progressHud];
+}
+
+- (void)initCollectionView
+{
+    self.collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init]; // 自定义的布局对象
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.collectionViewFlowLayout];
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    self.collectionView.scrollEnabled = YES;
+    self.collectionView.userInteractionEnabled = YES;
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
+    self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49, 0);
+    self.collectionView.scrollIndicatorInsets = _collectionView.contentInset;
+    [self.view addSubview:self.collectionView];
+    
+    // 注册cell、sectionHeader
+    [self.collectionView registerClass:[SYHomeGuardCollectionViewCell class] forCellWithReuseIdentifier:HomeGuardCollectionViewCellID];
+    [self.collectionView registerClass:[SYHomeBannerCollectionViewCell class] forCellWithReuseIdentifier:HomeBannerCollectionViewCellID];
+    [self.collectionView registerClass:[SYHomeCommandMessageCollectionViewCell class] forCellWithReuseIdentifier:HomeCommandMessageCollectionViewCellID];
+    [self.collectionView registerClass:[SYHomeCollectionViewHeaderCollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerId];
 }
 
 - (void)closeInforDetail
@@ -181,7 +193,7 @@ typedef enum : NSUInteger {
 
 - (void)handleDeviceOrientationDidChange:(UIInterfaceOrientation)interfaceOrientation
 {
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
     self.view.frame = CGRectMake(0, 0, screenWidth, screenHeight);
 }
 
@@ -192,6 +204,7 @@ typedef enum : NSUInteger {
     if ([[Common topViewController] isKindOfClass:[SYGuardMonitorViewController class]]) {
         [[Common topViewController] dismissViewControllerAnimated:NO completion:nil];
     }
+    [self.collectionView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -208,7 +221,7 @@ typedef enum : NSUInteger {
     [self getADpublishList];
     [self getRecommedList];
     self.menuVC = [[DoorListViewController alloc] init];
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
     
     [UIView animateWithDuration:0.2f animations:^{
         self.communityView.frame = CGRectMake(10, 70, self.titleView.frame.size.width - 60, 0);
@@ -271,9 +284,8 @@ typedef enum : NSUInteger {
 //添加门禁后刷新
 - (void)refreshGuard{
     
-    //[self getADpublishList];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView reloadData];
+//    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
+//    [self.tableView reloadData];
 }
 
 - (void)loadData:(NSNotification *)notif
@@ -324,7 +336,8 @@ typedef enum : NSUInteger {
     self.localCommunityBtn.frame = self.localCommunityLab.frame;
     self.localCommunityImgView.center = CGPointMake(self.localCommunityImgView.centerX, self.titleView.height * 0.5);
     
-    self.tableView.frame = CGRectMake(0, CGRectGetMaxY(self.titleView.frame),  screenWidth, screenHeight - CGRectGetMaxY(self.titleView.frame));
+    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.titleView.frame),  screenWidth - dockWidth, screenHeight - CGRectGetMaxY(self.titleView.frame));
+    [self.collectionView reloadData];
 }
 
 //扫一扫，选择归属社区
@@ -510,21 +523,18 @@ typedef enum : NSUInteger {
     [self.progressHud showAnimated:YES];
     [communityHttpDAO getRecommendListWithNeighborID:[SYAppConfig shareInstance].bindedModel.neibor_id.neighborhoods_id Succeed:^(NSArray *modelArr) {
         
-        [weakSelf.tableView.mj_header endRefreshing];
         [self.progressHud hideAnimated:YES];
         
         [weakSelf.todayNewsModelMArr removeAllObjects];
         if (modelArr.count > 0) {
             weakSelf.todayNewsModelMArr = [[NSMutableArray alloc] initWithArray:modelArr];
         }
-        [weakSelf.tableView reloadData];
+        [weakSelf.collectionView reloadData];
         
     } fail:^(NSError *error) {
         [self.progressHud hideAnimated:YES];
-        [weakSelf.tableView.mj_header endRefreshing];
         [weakSelf.todayNewsModelMArr removeAllObjects];
-        [weakSelf.tableView reloadData];
-        
+        [weakSelf.collectionView reloadData];
     }];
 }
 
@@ -541,7 +551,7 @@ typedef enum : NSUInteger {
     
     [communityHttpDAO getAdvertismentWithNeighborID:[SYAppConfig shareInstance].bindedModel.neibor_id.neighborhoods_id WithUserName:[SYLoginInfoModel shareUserInfo].userInfoModel.username Succeed:^(NSArray *modelArr) {
         
-        [weakSelf.tableView.mj_header endRefreshing];
+        NSLog(@"广告==%@",modelArr);
         [self.progressHud hideAnimated:YES];
         
         if (modelArr.count > 0) {
@@ -553,18 +563,17 @@ typedef enum : NSUInteger {
                     [weakSelf.adverMarr addObject:model];
                 }
             }
-            [weakSelf.tableView reloadData];
+            [weakSelf.collectionView reloadData];
         }else{
             [weakSelf.adverMarr removeAllObjects];
-            [weakSelf.tableView reloadData];
+            [weakSelf.collectionView reloadData];
         }
         
     } fail:^(NSError *error) {
 
-        [weakSelf.tableView.mj_header endRefreshing];
         [self.progressHud hideAnimated:YES];
         [weakSelf.adverMarr removeAllObjects];
-        [weakSelf.tableView reloadData];
+        [weakSelf.collectionView reloadData];
         
     }];
 }
@@ -643,6 +652,7 @@ typedef enum : NSUInteger {
 
 
 #pragma mark - tableview delegate
+/*
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (section == 2) {
@@ -792,6 +802,146 @@ typedef enum : NSUInteger {
         [self.drawer openDrawer];
     }
 }
+*/
+
+#pragma mark - UICollectionViewDataSource
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 3;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return 4;
+    }else if (section == 2) {
+        return self.todayNewsModelMArr.count;
+    }
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        //轮播图
+        SYHomeBannerCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeBannerCollectionViewCellID forIndexPath:indexPath];
+        [cell updateBannerInfo:self.adverMarr];
+        [cell setTapActionBlock:^(NSString *fredirecturl) {
+            NSLog(@"===fredirect_url====%@",fredirecturl);
+            
+        }];
+        
+        return cell;
+    }else if (indexPath.section == 1){
+        SYHomeGuardCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeGuardCollectionViewCellID forIndexPath:indexPath];
+        cell.delegate = self;
+        SYLockListModel *model = nil;
+        cell.indexPath = indexPath;
+        
+        if ([SYAppConfig shareInstance].selectedGuardMArr.count > indexPath.row) {
+            model = [[SYAppConfig shareInstance].selectedGuardMArr objectAtIndex:indexPath.row];
+            
+        }
+        [cell updateguardName:model];
+        
+        return cell;
+    }else{
+        SYHomeCommandMessageCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeCommandMessageCollectionViewCellID forIndexPath:indexPath];
+        
+        if (self.todayNewsModelMArr.count > indexPath.row) {
+            SYAdpublishModel *model  = [self.todayNewsModelMArr objectAtIndex:indexPath.row];
+            [cell updateRecommandInfo:model ShowTag:YES];
+        }
+        return cell;
+    }
+}
+
+// 和UITableView类似，UICollectionView也可设置段头段尾
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    if([kind isEqualToString:UICollectionElementKindSectionHeader])
+    {
+        SYHomeCollectionViewHeaderCollectionReusableView *headerView = [_collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerId forIndexPath:indexPath];
+        if(headerView == nil)
+        {
+            headerView = [[SYHomeCollectionViewHeaderCollectionReusableView alloc] init];
+        }
+        
+        if (indexPath.section == 1) {
+            [headerView updateTitle:@"门禁" moreLabel:@"全部门锁"];
+        }else if (indexPath.section == 2) {
+            [headerView updateTitle:@"推荐" moreLabel:@"更多"];
+        }
+        
+        [headerView setClickCallBack:^{
+            
+            if (indexPath.section == 1) {
+                //全部门禁
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"allLocks" object:nil];
+                self.menuVC.LockSelectTag = otherTag;
+                self.menuVC.view.hidden = NO;
+                [self openLockDoorList];
+                
+            }else if (indexPath.section == 2) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"moreNews" object:nil];
+            }
+        }];
+        return headerView;
+    }
+    
+    return nil;
+}
+
+
+#pragma mark ---- UICollectionViewDelegateFlowLayout
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {//banner
+        return (CGSize){screenWidth - dockWidth , SYHomeBannerCollectionViewCellHeight};
+    }
+    else if (indexPath.section == 2) {
+        return (CGSize){screenWidth - dockWidth , 70};
+    }
+    
+    return (CGSize){(screenWidth - dockWidth) * 0.5 , (screenWidth - dockWidth) * 0.5};
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    if (section == 2) {
+        return 5;
+    }
+    return 0;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return (CGSize){kScreenWidth - dockWidth, 0};
+    }
+    
+    return (CGSize){kScreenWidth - dockWidth, SYHomeCollectionViewHeaderCollectionReusableViewHeight};
+}
+
+// 选中某item
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 1) {
+        SYHomeGuardCollectionViewCell *cell = (SYHomeGuardCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+        if ([cell.guardNameLab.text isEqualToString:@"添加门锁"]) {
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"allLocks" object:nil];
+            self.menuVC.LockSelectTag = addTag;
+            self.menuVC.view.hidden = NO;
+            [self openLockDoorList];
+        }
+    }
+}
 
 - (void)openWebpage:(NSNotification *)notif
 {
@@ -805,10 +955,10 @@ typedef enum : NSUInteger {
 }
 
 #pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+//{
+//    return YES;
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

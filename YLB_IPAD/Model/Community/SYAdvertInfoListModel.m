@@ -20,7 +20,7 @@
 - (NSString *)description
 {
     SYAdvertInfoModel *model = self.pic_list[0];
-    return [NSString stringWithFormat:@"%@,%@,%@,%@", self.ftitle,self.fcontent,model.img_path,self.fposition];
+    return [NSString stringWithFormat:@"ftitle=%@,fcontent=%@,img_path=%@,fposition=%@", self.ftitle,self.fcontent,model.img_path,self.fposition];
 }
 @end
 
