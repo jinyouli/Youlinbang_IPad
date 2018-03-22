@@ -34,7 +34,7 @@
 - (void)configSubViews{
     self.backgroundColor = UIColorFromRGB(0xebebeb);
     
-    self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, SYHomeBannerCollectionViewCellHeight)];
+    self.mainView = [[UIView alloc] initWithFrame:CGRectMake(5, 0, kScreenWidth - dockWidth - 10, SYHomeBannerCollectionViewCellHeight)];
     self.mainView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.mainView];
     
@@ -69,11 +69,23 @@
 -(void)updateBannerInfo:(NSArray *)banners{
     
     NSMutableArray *bannerArr = [[NSMutableArray alloc] init];
-    for (SYAdvertInfoListModel *mdoel in banners) {
-        if ([mdoel.fposition isEqualToString:@"2"]) {
-            for (SYAdvertInfoModel *infoModel in mdoel.pic_list) {
-                NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:infoModel.img_path,@"img_path", infoModel.fredirecturl,@"fredirecturl", nil];
+    
+    NSLog(@"1==%@",banners);
+    
+    if (banners.count > 0) {
+        if ([banners[0] isKindOfClass:[NSDictionary class]]) {
+            for (NSDictionary *infoModel in banners) {
+                NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:infoModel[@"img_path"],@"img_path", infoModel[@"fredirecturl"],@"fredirecturl", nil];
                 [bannerArr addObject:dic];
+            }
+        }else {
+            for (SYAdvertInfoListModel *mdoel in banners) {
+                if ([mdoel.fposition isEqualToString:@"1"]) {
+                    for (SYAdvertInfoModel *infoModel in mdoel.pic_list) {
+                        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:infoModel.img_path,@"img_path", infoModel.fredirecturl,@"fredirecturl", nil];
+                        [bannerArr addObject:dic];
+                    }
+                }
             }
         }
     }
@@ -115,5 +127,12 @@
         }
     };
 }
+
+//- (void)layoutSubviews
+//{
+//    self.mainView.frame = CGRectMake(5, 0, kScreenWidth - dockWidth - 10, SYHomeBannerCollectionViewCellHeight);
+//    self.bannerView.frame = CGRectMake(0, 0, self.mainView.width_sd, self.mainView.height_sd);
+//
+//}
 
 @end

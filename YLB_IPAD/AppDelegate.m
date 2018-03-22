@@ -72,6 +72,7 @@
     [self registerRemoteNotification];
     
     [self configLinphone];
+    [self sipFirstRegister];
     
     NSString *isAllowNoDusturbMode = [[NSUserDefaults standardUserDefaults] objectForKey:@"isAllowNoDusturbMode"];
     NSString *isAllowHardDusturbMode = [[NSUserDefaults standardUserDefaults] objectForKey:@"isAllowHardDusturbMode"];
@@ -95,7 +96,23 @@
     
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     [self registerUserNotification];
+    [self createDatabase];
     return YES;
+}
+
+- (void)createDatabase
+{
+    //广告
+    NSString* const AdvertModel = @"AdvertModel";
+    NSArray * const addvertArray = [NSArray arrayWithObjects:@"fredirecturl",@"img_path",@"username",@"fneib_name", nil];
+    [[MyFMDataBase shareMyFMDataBase] createTableWithTableName:AdvertModel tableArray:addvertArray];
+    
+    NSString* const RecommandModel = @"RecommandTable";
+    NSArray * const recommandArray = [NSArray arrayWithObjects:@"ftitle",@"fpictureurl",@"fcreatetime",@"fnewsurl",@"adID",@"fcontent",@"type",@"username",@"fneib_name", nil];
+    //推荐
+    [[MyFMDataBase shareMyFMDataBase] createTableWithTableName:RecommandModel tableArray:recommandArray];
+    
+    [[MyFMDataBase shareMyFMDataBase] createTableWithTableName:sipModel tableArray:sipArray];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -659,10 +676,11 @@
         }
     }else if ([[resultDict allKeys] containsObject:@"token"]){
         
+        NSLog(@"收到==%@",resultDict);
         NSString *token = [resultDict objectForKey:@"token"];
         
         SYUserInfoModel *model = [SYUserInfoModel mj_objectWithKeyValues:resultDict];
-        
+        NSLog(@"收到2==%@",resultDict);
         [SYLoginInfoModel shareUserInfo].userInfoModel = model;
         
         if ([Common decryptWithText:token].length > 0) {
@@ -734,6 +752,21 @@
     SYUserInfoModel *model = [SYLoginInfoModel shareUserInfo].userInfoModel;
     
     [[SYLinphoneManager instance] addProxyConfig:model.user_sip password:model.user_password displayName:model.username domain:model.fs_ip port:model.fs_port withTransport:model.transport];
+    
+    NSDictionary *insertDict = [[NSDictionary alloc] initWithObjectsAndKeys:model.user_sip,@"user_sip",model.user_password,@"user_password",model.username,@"username",model.fs_ip,@"fs_ip",model.fs_port,@"fs_port",model.transport,@"transport", nil];
+    
+    [[MyFMDataBase shareMyFMDataBase] insertDataWithTableName:sipModel insertDictionary:insertDict];
+    
+}
+
+- (void)sipFirstRegister
+{
+    NSArray *mySipArray = [[MyFMDataBase shareMyFMDataBase] selectDataWithTableName:sipModel withDic:nil];
+    if (mySipArray.count > 0) {
+        SYUserInfoModel *model = mySipArray[0];
+        
+        [[SYLinphoneManager instance] addProxyConfig:model.user_sip password:model.user_password displayName:model.username domain:model.fs_ip port:model.fs_port withTransport:model.transport];
+    }
 }
 
 - (void)getUserInfoHeader:(SYUserInfoModel *)model

@@ -25,4 +25,5 @@
 @property (nonatomic,copy) NSString *token; //令牌
 @property (nonatomic,assign) unsigned long user_id;   //用户id
 
+- (NSString *)description;
 @end

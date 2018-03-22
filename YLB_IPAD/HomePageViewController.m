@@ -84,9 +84,6 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
 
 - (void)initUI{
     
-    UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeComunity)];
-    //[self.view addGestureRecognizer:gesture];
-    
     self.adverMarr = [[NSMutableArray alloc] init];
     self.todayNewsModelMArr = [[NSMutableArray alloc] init];
     self.view.backgroundColor = UIColorFromRGB(0xebebeb);
@@ -134,30 +131,41 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openVideo:) name:@"openVideo" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openComingCall:) name:@"openComingCall" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openPassword:) name:@"openPassword" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openWebpage:) name:@"openWebpage" object:nil];
-    
-    
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil ];
     
-    [self getRecommedList];
-    [self getADpublishList];
-    
+    [self selectFromDatabase];
     [self.view addSubview:self.progressHud];
+}
+
+- (void)selectFromDatabase
+{
+    NSDictionary *selectDict = [[NSDictionary alloc] initWithObjectsAndKeys:myUsername,@"username",myfneib_name,@"fneib_name", nil];
+    self.todayNewsModelMArr = [[NSMutableArray alloc] initWithArray:[[MyFMDataBase shareMyFMDataBase] selectDataWithTableName:@"RecommandTable" withDic:selectDict]];
+    if (self.todayNewsModelMArr.count == 0) {
+        [self getRecommedList];
+    }
+    
+    self.adverMarr = [[NSMutableArray alloc] initWithArray:[[MyFMDataBase shareMyFMDataBase] selectDataWithTableName:@"AdvertModel" withDic:selectDict]];
+    if (self.adverMarr.count == 0) {
+        [self getADpublishList];
+    }
+    
+    [self.collectionView reloadData];
 }
 
 - (void)initCollectionView
 {
     self.collectionViewFlowLayout = [[UICollectionViewFlowLayout alloc] init]; // 自定义的布局对象
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.collectionViewFlowLayout];
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     self.collectionView.scrollEnabled = YES;
     self.collectionView.userInteractionEnabled = YES;
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
-    self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+   // self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     self.collectionView.contentInset = UIEdgeInsetsMake(64, 0, 49, 0);
     self.collectionView.scrollIndicatorInsets = _collectionView.contentInset;
     [self.view addSubview:self.collectionView];
@@ -167,6 +175,13 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     [self.collectionView registerClass:[SYHomeBannerCollectionViewCell class] forCellWithReuseIdentifier:HomeBannerCollectionViewCellID];
     [self.collectionView registerClass:[SYHomeCommandMessageCollectionViewCell class] forCellWithReuseIdentifier:HomeCommandMessageCollectionViewCellID];
     [self.collectionView registerClass:[SYHomeCollectionViewHeaderCollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerId];
+    
+    WEAK_SELF;
+    self.collectionView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        [weakSelf getRecommedList];
+        [weakSelf getADpublishList];
+    }];
+    [self.collectionView setContentInset:UIEdgeInsetsMake(5, 0, 10, 0)];
 }
 
 - (void)closeInforDetail
@@ -232,7 +247,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
 {
     //[self closeDrawer];
     //self.menuVC.view.hidden = NO;
-        
+    NSLog(@"模型==%@",notif.object);
     if ([[Common topViewController] isKindOfClass:[MainViewController class]]) {
         
         SYLockListModel *model = notif.object;
@@ -286,6 +301,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     
 //    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
 //    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadData:(NSNotification *)notif
@@ -336,8 +352,13 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     self.localCommunityBtn.frame = self.localCommunityLab.frame;
     self.localCommunityImgView.center = CGPointMake(self.localCommunityImgView.centerX, self.titleView.height * 0.5);
     
-    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.titleView.frame),  screenWidth - dockWidth, screenHeight - CGRectGetMaxY(self.titleView.frame));
+    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.titleView.frame),  screenWidth - dockWidth, screenHeight - 50);
     [self.collectionView reloadData];
+    
+    SYHomeBannerCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeBannerCollectionViewCellID forIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    if (self.adverMarr.count > 0) {
+        [cell updateBannerInfo:self.adverMarr];
+    }
 }
 
 //扫一扫，选择归属社区
@@ -460,9 +481,9 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     [self.drawer openDrawer];
 }
 
-- (void)changeNewDoor:(NSInteger)selectIndex
+- (void)changeNewDoor:(UIButton *)btn
 {
-    self.menuVC.clickIndex = selectIndex;
+    self.menuVC.clickIndex = btn.tag;
     self.menuVC.LockSelectTag = changeTag;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"allLocks" object:nil];
     [self.drawer setContentView:self.menuVC.view];
@@ -470,14 +491,14 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     [self.drawer openDrawer];
 }
 
-- (void)deleteNewDoor:(NSInteger)selectIndex
+- (void)deleteNewDoor:(UIButton *)btn
 {
 //    self.menuVC.clickIndex = selectIndex;
 //    self.menuVC.LockSelectTag = deleteTag;
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"allLocks" object:nil];
 //    [self.drawer openDrawer];
     
-    [self guardDelete:selectIndex];
+    [self guardDelete:btn.tag];
 }
 
 //删除门锁
@@ -488,9 +509,11 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         [SYAppConfig shareInstance].selectedGuardMArr = [[NSMutableArray alloc] init];
     }
     
-    [[SYAppConfig shareInstance].selectedGuardMArr removeObjectAtIndex:selectIndex];
-    [SYAppConfig saveMyHistoryNeighborLockList];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SYNOTICE_REFRESH_GUARD object:nil];
+    if ([SYAppConfig shareInstance].selectedGuardMArr.count >= selectIndex) {
+        [[SYAppConfig shareInstance].selectedGuardMArr removeObjectAtIndex:selectIndex];
+        [SYAppConfig saveMyHistoryNeighborLockList];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SYNOTICE_REFRESH_GUARD object:nil];
+    }
 }
 
 
@@ -522,12 +545,26 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     WEAK_SELF;
     [self.progressHud showAnimated:YES];
     [communityHttpDAO getRecommendListWithNeighborID:[SYAppConfig shareInstance].bindedModel.neibor_id.neighborhoods_id Succeed:^(NSArray *modelArr) {
-        
+        [weakSelf.collectionView.mj_header endRefreshing];
         [self.progressHud hideAnimated:YES];
         
         [weakSelf.todayNewsModelMArr removeAllObjects];
         if (modelArr.count > 0) {
             weakSelf.todayNewsModelMArr = [[NSMutableArray alloc] initWithArray:modelArr];
+            
+            //删除已有的数据库
+            NSString *username = [SYLoginInfoModel shareUserInfo].userInfoModel.username;
+            NSString *fneib_name = [[NSUserDefaults standardUserDefaults] objectForKey:@"fneib_name"];
+
+            NSDictionary *deleteDict = [[NSDictionary alloc] initWithObjectsAndKeys:username,@"username",fneib_name,@"fneib_name", nil];
+            [[MyFMDataBase shareMyFMDataBase] deleteDataWithTableName:@"RecommandModel" delegeteDic:deleteDict];
+            
+            for (SYAdpublishModel *myModel in modelArr) {
+                
+                NSDictionary *insertDict = [[NSDictionary alloc] initWithObjectsAndKeys:myModel.ftitle,@"ftitle",myModel.fpictureurl,@"fpictureurl",myModel.fcreatetime,@"fcreatetime",myModel.fnewsurl,@"fnewsurl",myModel.adID,@"adID",myModel.fcontent,@"fcontent",[NSNumber numberWithInt:myModel.type],@"type",username,@"username",fneib_name,@"fneib_name", nil];
+                
+                [[MyFMDataBase shareMyFMDataBase] insertDataWithTableName:@"RecommandTable" insertDictionary:insertDict];
+            }
         }
         [weakSelf.collectionView reloadData];
         
@@ -535,6 +572,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         [self.progressHud hideAnimated:YES];
         [weakSelf.todayNewsModelMArr removeAllObjects];
         [weakSelf.collectionView reloadData];
+        [weakSelf.collectionView.mj_header endRefreshing];
     }];
 }
 
@@ -551,16 +589,29 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     
     [communityHttpDAO getAdvertismentWithNeighborID:[SYAppConfig shareInstance].bindedModel.neibor_id.neighborhoods_id WithUserName:[SYLoginInfoModel shareUserInfo].userInfoModel.username Succeed:^(NSArray *modelArr) {
         
-        NSLog(@"广告==%@",modelArr);
+        [weakSelf.collectionView.mj_header endRefreshing];
         [self.progressHud hideAnimated:YES];
         
         if (modelArr.count > 0) {
             [weakSelf.adverMarr removeAllObjects];
             
+            //删除已有的数据库
+            NSString *username = [SYLoginInfoModel shareUserInfo].userInfoModel.username;
+            NSString *fneib_name = [[NSUserDefaults standardUserDefaults] objectForKey:@"fneib_name"];
+            
+            NSDictionary *deleteDict = [[NSDictionary alloc] initWithObjectsAndKeys:username,@"username",fneib_name,@"fneib_name", nil];
+            [[MyFMDataBase shareMyFMDataBase] deleteDataWithTableName:@"AdvertModel" delegeteDic:deleteDict];
+            
             for (int i=0; i<modelArr.count; i++) {
                 SYAdvertInfoListModel *model = [modelArr objectAtIndex:i];
                 if ([model.fposition isEqualToString:@"1"]) {
                     [weakSelf.adverMarr addObject:model];
+                    
+                    SYAdvertInfoModel *advertModel = model.pic_list[0];
+                    NSDictionary *insertDict = [[NSDictionary alloc] initWithObjectsAndKeys:advertModel.fredirecturl,@"fredirecturl",advertModel.img_path,@"img_path",username,@"username",fneib_name,@"fneib_name", nil];
+                    NSLog(@"图片==%@,%@",advertModel.img_path,advertModel.fredirecturl);
+                    
+                    [[MyFMDataBase shareMyFMDataBase] insertDataWithTableName:@"AdvertModel" insertDictionary:insertDict];
                 }
             }
             [weakSelf.collectionView reloadData];
@@ -570,7 +621,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         }
         
     } fail:^(NSError *error) {
-
+        [weakSelf.collectionView.mj_header endRefreshing];
         [self.progressHud hideAnimated:YES];
         [weakSelf.adverMarr removeAllObjects];
         [weakSelf.collectionView reloadData];
@@ -793,14 +844,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 2) {
-        
-        SYRecommendModel *model = [self.todayNewsModelMArr objectAtIndex:indexPath.row];  
-        
-        self.webCtrl = [[SYWebPageCtrl alloc] initWithUrl:model.fnewsurl title:model.ftitle];
-        [self.drawer setContentView:self.webCtrl.view];
-        [self.drawer openDrawer];
-    }
+ 
 }
 */
 
@@ -827,22 +871,28 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         SYHomeBannerCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeBannerCollectionViewCellID forIndexPath:indexPath];
         [cell updateBannerInfo:self.adverMarr];
         [cell setTapActionBlock:^(NSString *fredirecturl) {
-            NSLog(@"===fredirect_url====%@",fredirecturl);
-            
+            self.webCtrl = [[SYWebPageCtrl alloc] initWithUrl:fredirecturl title:@""];
+            [self.drawer setContentView:self.webCtrl.view];
+            [self.drawer openDrawer];
         }];
         
         return cell;
     }else if (indexPath.section == 1){
         SYHomeGuardCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeGuardCollectionViewCellID forIndexPath:indexPath];
-        cell.delegate = self;
+        //cell.delegate = self;
         SYLockListModel *model = nil;
         cell.indexPath = indexPath;
+        cell.contentView.backgroundColor = [UIColor whiteColor];
         
         if ([SYAppConfig shareInstance].selectedGuardMArr.count > indexPath.row) {
             model = [[SYAppConfig shareInstance].selectedGuardMArr objectAtIndex:indexPath.row];
-            
         }
         [cell updateguardName:model];
+        cell.lockChangeBtn.tag = indexPath.row;
+        [cell.lockChangeBtn addTarget:self action:@selector(changeNewDoor:) forControlEvents:UIControlEventTouchUpInside];
+        
+        cell.lockDeleteBtn.tag = indexPath.row;
+        [cell.lockDeleteBtn addTarget:self action:@selector(deleteNewDoor:) forControlEvents:UIControlEventTouchUpInside];
         
         return cell;
     }else{
@@ -868,7 +918,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         }
         
         if (indexPath.section == 1) {
-            [headerView updateTitle:@"门禁" moreLabel:@"全部门锁"];
+            [headerView updateTitle:@"快捷开锁" moreLabel:@"全部门锁"];
         }else if (indexPath.section == 2) {
             [headerView updateTitle:@"推荐" moreLabel:@"更多"];
         }
@@ -903,7 +953,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         return (CGSize){screenWidth - dockWidth , 70};
     }
     
-    return (CGSize){(screenWidth - dockWidth) * 0.5 , (screenWidth - dockWidth) * 0.5};
+    return (CGSize){(screenWidth - dockWidth - 20) * 0.5 , (screenWidth - dockWidth - 20) * 0.5 * 0.7};
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
@@ -911,12 +961,18 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     if (section == 2) {
         return 5;
     }
-    return 0;
+    return 10;
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
 {
     return 0;
+}
+
+//定义每个Section的四边间距
+-(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(5, 5, 5, 5);//分别为上、左、下、右
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -934,21 +990,18 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     if (indexPath.section == 1) {
         SYHomeGuardCollectionViewCell *cell = (SYHomeGuardCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
         if ([cell.guardNameLab.text isEqualToString:@"添加门锁"]) {
-            
+
             [[NSNotificationCenter defaultCenter] postNotificationName:@"allLocks" object:nil];
+            [self.drawer setContentView:self.menuVC.view];
             self.menuVC.LockSelectTag = addTag;
             self.menuVC.view.hidden = NO;
-            [self openLockDoorList];
+            [self.drawer openDrawer];
         }
-    }
-}
-
-- (void)openWebpage:(NSNotification *)notif
-{
-    SYAdvertInfoListModel *model = notif.object;
-    if (model.pic_list.count > 0) {
-        SYAdvertInfoModel *picModel = [model.pic_list objectAtIndex:0];
-        self.webCtrl = [[SYWebPageCtrl alloc] initWithUrl:picModel.fredirecturl title:model.ftitle];
+    }else if (indexPath.section == 2) {
+        
+        SYRecommendModel *model = [self.todayNewsModelMArr objectAtIndex:indexPath.row];
+        
+        self.webCtrl = [[SYWebPageCtrl alloc] initWithUrl:model.fnewsurl title:model.ftitle];
         [self.drawer setContentView:self.webCtrl.view];
         [self.drawer openDrawer];
     }

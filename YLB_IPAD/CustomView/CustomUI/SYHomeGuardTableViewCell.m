@@ -122,16 +122,16 @@
 #pragma mark - event
 - (void)lockChangeBtn:(UIButton *)btn
 {
-    if ([self.delegate respondsToSelector:@selector(changeNewDoor:)]) {
-        [self.delegate changeNewDoor:btn.tag];
-    }
+//    if ([self.delegate respondsToSelector:@selector(changeNewDoor:)]) {
+//        [self.delegate changeNewDoor:btn.tag];
+//    }
 }
 
 - (void)lockDeleteBtn:(UIButton *)btn
 {
-    if ([self.delegate respondsToSelector:@selector(deleteNewDoor:)]) {
-        [self.delegate deleteNewDoor:btn.tag];
-    }
+//    if ([self.delegate respondsToSelector:@selector(deleteNewDoor:)]) {
+//        [self.delegate deleteNewDoor:btn.tag];
+//    }
 }
 
 #pragma mark - public

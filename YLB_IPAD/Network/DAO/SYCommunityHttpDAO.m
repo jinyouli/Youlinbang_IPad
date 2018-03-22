@@ -435,7 +435,7 @@
     [SYBaseHttp requestWithInfo:resuestInfo completeHandler:^(SYResponseInfo *responseInfo) {
         
         if (responseInfo.code == SYResponseSuccessCode) {
-
+            
             NSArray *model = [SYAdvertInfoListModel mj_objectArrayWithKeyValuesArray:responseInfo.result];
             if (successBlock) {
                 successBlock(model);

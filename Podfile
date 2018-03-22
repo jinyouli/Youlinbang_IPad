@@ -23,6 +23,7 @@ target 'YLB_IPAD’ do
   pod "Qiniu", "~> 7.1"
   pod 'SZTextView'
   pod 'ZBarSDK'
+  pod 'FMDB'
   pod 'SVProgressHUD'
   pod 'Reachability'
   pod 'BlocksKit'

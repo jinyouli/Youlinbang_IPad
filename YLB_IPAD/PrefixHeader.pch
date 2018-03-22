@@ -21,6 +21,8 @@
 
 #define LC ([LinphoneManager getLc])
 
+#import "PMConst.h"
+#import "MyFMDataBase.h"
 #import "SYHomeCollectionViewHeaderCollectionReusableView.h"
 #import "SYAdpublishModel.h"
 #import "SYLockListModel.h"
@@ -76,6 +78,7 @@
 #define ABOVE_IOS10 ([UIDevice currentDevice].systemVersion.floatValue >= 10)
  */
 
+
 //门锁的高度
 #define SYHomeGuardTableViewCellCellHeight 400
 
@@ -103,14 +106,22 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #define cellWidth screenWidth * 0.7
 
-//#define dockWidth 120
-#define dockWidth screenWidth * 0.2
+//用户标识
+#define myUsername [SYLoginInfoModel shareUserInfo].userInfoModel.username
+//社区标识
+#define myfneib_name [[NSUserDefaults standardUserDefaults] objectForKey:@"fneib_name"]
+
+#define dockWidth 120
+//#define dockWidth screenWidth * 0.2
 
 #ifdef DEBUG
 #define NSLog(...) NSLog(__VA_ARGS__);
 #else
 #define NSLog(...)
 #endif
+
+
+
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 

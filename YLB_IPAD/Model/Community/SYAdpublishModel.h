@@ -17,4 +17,6 @@
 @property (nonatomic,copy) NSString *adID;       //id
 @property (nonatomic,copy) NSString *fcontent;      //内容
 @property (nonatomic,assign) int type;      //类型，1为手机端广告资讯，2为社区头条
+
+- (NSString *)description;
 @end

@@ -446,10 +446,11 @@
 
 - (void)loginOut
 {
-    //[[SYLinphoneManager instance] removeAccount];   //sip登出
+    [[SYLinphoneManager instance] removeAccount];   //sip登出
     [SYLoginInfoModel loginOut];
     [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"alreadyLogin"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"loginAgain" object:nil];
+    [[MyFMDataBase shareMyFMDataBase] deleteDataWithTableName:sipModel delegeteDic:nil];
 }
 
 - (void)showCamerer

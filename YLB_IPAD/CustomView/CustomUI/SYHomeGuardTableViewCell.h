@@ -13,8 +13,8 @@
 - (void)guardClick:(NSIndexPath *)indexPath LockListModel:(SYLockListModel *)model; //点击门禁
 - (void)addGuardClick:(NSIndexPath *)indexPath LockListModel:(SYLockListModel *)model;  //点击添加门禁按钮
 - (void)addNewDoor:(NSInteger)selectIndex;
-- (void)changeNewDoor:(NSInteger)selectIndex;
-- (void)deleteNewDoor:(NSInteger)selectIndex;
+- (void)changeNewDoor:(UIButton *)btn;
+- (void)deleteNewDoor:(UIButton *)btn;
 @end
 
 @interface SYHomeGuardTableViewCell : UITableViewCell

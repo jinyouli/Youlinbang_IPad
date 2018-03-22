@@ -16,4 +16,6 @@
 @property (nonatomic,copy) NSString *sip_number;    // "1000000031",
 @property (nonatomic,copy) NSString *lock_parent_name;    // "碧桂园别名21"
 @property (nonatomic,copy) NSString *bt_uuid;   ///蓝牙模块uuid
+
+- (NSString *)description;
 @end

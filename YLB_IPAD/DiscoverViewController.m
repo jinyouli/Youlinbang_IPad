@@ -81,8 +81,6 @@
     [self.view addSubview:self.tableView];
     
     WEAK_SELF;
-    
-    
     self.tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
         [weakSelf getAdvertiseList];
     }];
@@ -260,30 +258,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - tableview delegate
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return 1;
-    }else{
-        return 1;
-    }
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 2;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    if (indexPath.section == 0) {
-        return SYHomeBannerTableViewCellHeight;
-    }else{
-        return self.view.height_sd - 60;
-    }
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (UIView *)getSegmentalView
 {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 50)];
     view.backgroundColor = [UIColor clearColor];
@@ -310,11 +285,36 @@
     return view;
 }
 
+#pragma mark - tableview delegate
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 3;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (indexPath.section == 0) {
+        return SYHomeBannerTableViewCellHeight;
+    }else if (indexPath.section == 1) {
+        return 50;
+    }
+    else{
+        return self.view.height_sd - 60;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] init];
+    return view;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (section == 1) {
-        return 50.0f;
-    }
     return 0.0f;
 }
 
@@ -342,7 +342,11 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
-        [cell.contentView addSubview:self.customScrollView];
+        if (indexPath.section == 1) {
+            [cell.contentView addSubview:[self getSegmentalView]];
+        }else{
+            [cell.contentView addSubview:self.customScrollView];
+        }
         cell.contentView.backgroundColor = [UIColor clearColor];
         
         return cell;

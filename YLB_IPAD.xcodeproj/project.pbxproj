@@ -11,6 +11,9 @@
 		297E2A65453298504DA60CAE /* libPods-YLB_IPAD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 562821E738DD936AC40699B2 /* libPods-YLB_IPAD.a */; };
 		30519261CA754F4B2C16DFE9 /* libPods-YLB_IPADTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1EACA742F842CC388A7B765 /* libPods-YLB_IPADTests.a */; };
 		5D3778190CB371D7BB85758D /* libPods-NotificationService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA9B0FFC587B304E7BB17787 /* libPods-NotificationService.a */; };
+		E9943BED2062152200708316 /* MyFMDataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = E9943BEC2062152100708316 /* MyFMDataBase.m */; };
+		E99F085620634D11004C63A8 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E99F085520634D10004C63A8 /* libsqlite3.0.tbd */; };
+		E99F085920635133004C63A8 /* PMConst.mm in Sources */ = {isa = PBXBuildFile; fileRef = E99F085820635133004C63A8 /* PMConst.mm */; };
 		E9DEF4C52060BD7D00145B81 /* SYHomeBannerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DEF4C42060BD7C00145B81 /* SYHomeBannerCollectionViewCell.m */; };
 		E9DEF4C92060EDCE00145B81 /* banner_0.png in Resources */ = {isa = PBXBuildFile; fileRef = E9DEF4C62060EDCD00145B81 /* banner_0.png */; };
 		E9DEF4CA2060EDCE00145B81 /* banner_1.png in Resources */ = {isa = PBXBuildFile; fileRef = E9DEF4C72060EDCD00145B81 /* banner_1.png */; };
@@ -539,6 +542,11 @@
 		DED83DAF10CCC195F6335087 /* libPods-YLB_IPADUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-YLB_IPADUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1EACA742F842CC388A7B765 /* libPods-YLB_IPADTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-YLB_IPADTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E299035486A27B88913FBA99 /* Pods-YLB_IPAD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLB_IPAD.release.xcconfig"; path = "Pods/Target Support Files/Pods-YLB_IPAD/Pods-YLB_IPAD.release.xcconfig"; sourceTree = "<group>"; };
+		E9943BEB2062152000708316 /* MyFMDataBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyFMDataBase.h; sourceTree = "<group>"; };
+		E9943BEC2062152100708316 /* MyFMDataBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyFMDataBase.m; sourceTree = "<group>"; };
+		E99F085520634D10004C63A8 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		E99F085720635133004C63A8 /* PMConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMConst.h; sourceTree = "<group>"; };
+		E99F085820635133004C63A8 /* PMConst.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PMConst.mm; sourceTree = "<group>"; };
 		E9DEF4C32060BD7C00145B81 /* SYHomeBannerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SYHomeBannerCollectionViewCell.h; sourceTree = "<group>"; };
 		E9DEF4C42060BD7C00145B81 /* SYHomeBannerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SYHomeBannerCollectionViewCell.m; sourceTree = "<group>"; };
 		E9DEF4C62060EDCD00145B81 /* banner_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = banner_0.png; sourceTree = "<group>"; };
@@ -1670,6 +1678,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99F085620634D11004C63A8 /* libsqlite3.0.tbd in Frameworks */,
 				F8A7EA461F8DC61000F7F872 /* LocalAuthentication.framework in Frameworks */,
 				F80C1E4A1F06028000EECC75 /* UserNotifications.framework in Frameworks */,
 				F8406E1E1F03AB7200213C72 /* libz.tbd in Frameworks */,
@@ -3311,6 +3320,7 @@
 		F8406DE01F0352E300213C72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E99F085520634D10004C63A8 /* libsqlite3.0.tbd */,
 				F8A7EA451F8DC61000F7F872 /* LocalAuthentication.framework */,
 				F80C1E491F06028000EECC75 /* UserNotifications.framework */,
 				F8406E1D1F03AB7200213C72 /* libz.tbd */,
@@ -3391,6 +3401,8 @@
 				F8CF1CB61F02432600F0E194 /* notes_of_the_optimistic.caf */,
 				F8CF1CB81F02432600F0E194 /* ringtone.mp3 */,
 				F8977FC11F4D860500D45915 /* ring.caf */,
+				E99F085720635133004C63A8 /* PMConst.h */,
+				E99F085820635133004C63A8 /* PMConst.mm */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -3603,6 +3615,8 @@
 		F8E067011F04F80B0022C62D /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				E9943BEB2062152000708316 /* MyFMDataBase.h */,
+				E9943BEC2062152100708316 /* MyFMDataBase.m */,
 				F8E067021F04F80B0022C62D /* FileManager */,
 				F8E067091F04F80B0022C62D /* FrameManager */,
 				F8E0670C1F04F80B0022C62D /* StringToView */,
@@ -4343,13 +4357,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YLB_IPADUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		1C5BB7F37982D259094C00E3 /* [CP] Copy Pods Resources */ = {
@@ -4388,13 +4405,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YLB_IPAD-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9A24B9BBA30E507B61405244 /* [CP] Check Pods Manifest.lock */ = {
@@ -4403,13 +4423,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YLB_IPADTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9ECF2AC87553AC140D287968 /* [CP] Copy Pods Resources */ = {
@@ -4448,13 +4471,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NotificationService-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E4F26A710A1F46AAA2F9920F /* [CP] Copy Pods Resources */ = {
@@ -4463,9 +4489,26 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-YLB_IPAD/Pods-YLB_IPAD-resources.sh",
+				"${PODS_ROOT}/AMap2DMap/MAMapKit.framework/AMap.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/CTAssetsPickerController/CTAssetsPickerController.bundle",
+				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
+				"${PODS_ROOT}/SVProgressHUD/SVProgressHUD/SVProgressHUD.bundle",
+				"${PODS_ROOT}/ZBarSDK/iphone/res/zbar-back.png",
+				"${PODS_ROOT}/ZBarSDK/iphone/res/zbar-help.html",
+				"${PODS_ROOT}/ZBarSDK/iphone/res/zbar-helpicons.png",
+				"${PODS_ROOT}/ZBarSDK/iphone/res/zbar-samples.png",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CTAssetsPickerController.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SVProgressHUD.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zbar-back.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zbar-help.html",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zbar-helpicons.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/zbar-samples.png",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4643,6 +4686,7 @@
 				F80C1E431F05EE1D00EECC75 /* SYSetMyConfigInfoViewController.m in Sources */,
 				F80C1DC51F05ED9D00EECC75 /* SYFirstLaunchView.m in Sources */,
 				F8E067B81F04FF400022C62D /* UzysAppearanceConfig.m in Sources */,
+				E99F085920635133004C63A8 /* PMConst.mm in Sources */,
 				F80C1DEA1F05EDCB00EECC75 /* SYAllNewsViewController.m in Sources */,
 				E9DEF4D12060F27A00145B81 /* SYAdpublishModel.m in Sources */,
 				F82D79901F78BB4D002F633D /* FSPagerViewCell.swift in Sources */,
@@ -4671,6 +4715,7 @@
 				F82E81311F3893F8004A7545 /* CommunityPublishCtrl.m in Sources */,
 				F80C1D721F05EC4800EECC75 /* SYHomeAllGuardsViewController.m in Sources */,
 				F8E067131F04F80B0022C62D /* SYRoundHeadView.m in Sources */,
+				E9943BED2062152200708316 /* MyFMDataBase.m in Sources */,
 				E9DEF4D42060FD5F00145B81 /* SYHomeCollectionViewHeaderCollectionReusableView.m in Sources */,
 				F82E81101F388DF5004A7545 /* DeviceSaveCtrl.m in Sources */,
 				F82E81321F3893F8004A7545 /* PropertyStateCtrl.m in Sources */,
