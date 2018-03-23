@@ -96,8 +96,9 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [delegate.window.rootViewController.view addSubview:self.backMask];
 
-    [self setTitleView];
     [self initCollectionView];
+    [self setTitleView];
+    
     
     self.progressHud = [[MBProgressHUD alloc] initWithView:self.view];
     self.progressHud.mode = MBProgressHUDModeIndeterminate;
@@ -236,7 +237,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     [self getADpublishList];
     [self getRecommedList];
     self.menuVC = [[DoorListViewController alloc] init];
-    //[self.tableView reloadData];
+    [self.collectionView reloadData];
     
     [UIView animateWithDuration:0.2f animations:^{
         self.communityView.frame = CGRectMake(10, 70, self.titleView.frame.size.width - 60, 0);
@@ -247,7 +248,6 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
 {
     //[self closeDrawer];
     //self.menuVC.view.hidden = NO;
-    NSLog(@"模型==%@",notif.object);
     if ([[Common topViewController] isKindOfClass:[MainViewController class]]) {
         
         SYLockListModel *model = notif.object;
@@ -352,7 +352,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
     self.localCommunityBtn.frame = self.localCommunityLab.frame;
     self.localCommunityImgView.center = CGPointMake(self.localCommunityImgView.centerX, self.titleView.height * 0.5);
     
-    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.titleView.frame),  screenWidth - dockWidth, screenHeight - 50);
+    self.collectionView.frame = CGRectMake(0, CGRectGetMaxY(self.titleView.frame) + 10,  screenWidth - dockWidth, screenHeight - 60);
     [self.collectionView reloadData];
     
     SYHomeBannerCollectionViewCell *cell = [_collectionView dequeueReusableCellWithReuseIdentifier:HomeBannerCollectionViewCellID forIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
@@ -557,7 +557,13 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
             NSString *fneib_name = [[NSUserDefaults standardUserDefaults] objectForKey:@"fneib_name"];
 
             NSDictionary *deleteDict = [[NSDictionary alloc] initWithObjectsAndKeys:username,@"username",fneib_name,@"fneib_name", nil];
-            [[MyFMDataBase shareMyFMDataBase] deleteDataWithTableName:@"RecommandModel" delegeteDic:deleteDict];
+            
+            NSArray *arraycount = [[MyFMDataBase shareMyFMDataBase] selectDataWithTableName:@"RecommandTable" withDic:deleteDict];
+            
+            if (arraycount > 0) {
+                [[MyFMDataBase shareMyFMDataBase] deleteDataWithTableName:@"RecommandTable" delegeteDic:deleteDict];
+            }
+            
             
             for (SYAdpublishModel *myModel in modelArr) {
                 
@@ -574,6 +580,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         [weakSelf.collectionView reloadData];
         [weakSelf.collectionView.mj_header endRefreshing];
     }];
+    [self.progressHud hideAnimated:YES];
 }
 
 #pragma mark -- 获取广告图
@@ -614,6 +621,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
                     [[MyFMDataBase shareMyFMDataBase] insertDataWithTableName:@"AdvertModel" insertDictionary:insertDict];
                 }
             }
+            
             [weakSelf.collectionView reloadData];
         }else{
             [weakSelf.adverMarr removeAllObjects];
@@ -627,6 +635,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         [weakSelf.collectionView reloadData];
         
     }];
+    [self.progressHud hideAnimated:YES];
 }
 
 - (void)neighborNewsTimerOpen{
@@ -884,6 +893,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         cell.indexPath = indexPath;
         cell.contentView.backgroundColor = [UIColor whiteColor];
         
+        
         if ([SYAppConfig shareInstance].selectedGuardMArr.count > indexPath.row) {
             model = [[SYAppConfig shareInstance].selectedGuardMArr objectAtIndex:indexPath.row];
         }
@@ -950,7 +960,7 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
         return (CGSize){screenWidth - dockWidth , SYHomeBannerCollectionViewCellHeight};
     }
     else if (indexPath.section == 2) {
-        return (CGSize){screenWidth - dockWidth , 70};
+        return (CGSize){screenWidth - dockWidth - 10, 70};
     }
     
     return (CGSize){(screenWidth - dockWidth - 20) * 0.5 , (screenWidth - dockWidth - 20) * 0.5 * 0.7};
@@ -1008,10 +1018,10 @@ static NSString *const HomeCommandMessageCollectionViewCellID = @"SYHomeCommandM
 }
 
 #pragma mark - UIGestureRecognizerDelegate
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-//{
-//    return YES;
-//}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

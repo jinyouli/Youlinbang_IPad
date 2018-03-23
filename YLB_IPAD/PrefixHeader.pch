@@ -111,8 +111,8 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 //社区标识
 #define myfneib_name [[NSUserDefaults standardUserDefaults] objectForKey:@"fneib_name"]
 
-#define dockWidth 120
-//#define dockWidth screenWidth * 0.2
+//#define dockWidth 120
+#define dockWidth screenWidth * 0.2
 
 #ifdef DEBUG
 #define NSLog(...) NSLog(__VA_ARGS__);

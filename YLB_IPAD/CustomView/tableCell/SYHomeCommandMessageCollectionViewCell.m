@@ -37,7 +37,7 @@
 - (void)configSubViews{
     self.backgroundColor = UIColorFromRGB(0xebebeb);
     
-    self.mainView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, SYHomeCommandMessageCollectionViewCellHeight)];
+    self.mainView = [[UIView alloc] initWithFrame:CGRectMake(5, 0, kScreenWidth - dockWidth - 10, SYHomeCommandMessageCollectionViewCellHeight)];
     self.mainView.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.mainView];
     
@@ -101,6 +101,26 @@
         self.tagLab.text = @"头条";
     }
     [self.iconImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",model.fpictureurl]] placeholderImage:[UIImage imageNamed:@"sy_home_placeholder"]];
+}
+
+- (void)layoutSubviews
+{
+    self.mainView.frame = CGRectMake(5, 0, kScreenWidth - dockWidth - 20, SYHomeCommandMessageCollectionViewCellHeight);
+    self.iconImgView.frame = CGRectMake(12, 12, (SYHomeCommandMessageCollectionViewCellHeight - 24) * 1.6, SYHomeCommandMessageCollectionViewCellHeight - 24);
+    self.iconImgView.center = CGPointMake(self.iconImgView.centerX, self.mainView.height * 0.5f);
+    
+    float fLabHeight = (SYHomeCommandMessageCollectionViewCellHeight - 24) / 3;
+    self.titleLab.frame = CGRectMake(self.iconImgView.right_sd + 12, self.iconImgView.top_sd, kScreenWidth - dockWidth - self.iconImgView.right_sd - 44, fLabHeight);
+    self.conmentLab.frame = CGRectMake(self.titleLab.left_sd, self.titleLab.bottom_sd, self.titleLab.width_sd, fLabHeight);
+
+    self.timeLab.frame = CGRectMake(self.titleLab.left_sd, self.conmentLab.bottom_sd, self.titleLab.width_sd, fLabHeight);
+    self.line.frame = CGRectMake(0, SYHomeCommandMessageCollectionViewCellHeight - 1, kScreenWidth - dockWidth - 20, 1);
+
+    UIFont *font = [UIFont systemFontOfSize:10];
+    NSString *str = @"资讯";
+    CGSize size = [str sizeWithFont:font andSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    self.tagImgView.frame = CGRectMake(0, self.iconImgView.height_sd - size.height - 2, size.width + 10, size.height + 2);
+    self.tagLab.frame = CGRectMake(0, 0, size.width, size.height);
 }
 
 @end

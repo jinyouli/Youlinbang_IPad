@@ -32,6 +32,7 @@
         self.iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake((kScreenWidth - dockWidth) - 20, 0, 8, 13)];
         self.iconImageView.image = [UIImage imageNamed:@"sy_me_rightArrow"];
         self.iconImageView.center = CGPointMake(self.iconImageView.centerX, SYHomeCollectionViewHeaderCollectionReusableViewHeight * 0.5);
+        self.iconImageView.contentMode = UIViewContentModeCenter;
         [self addSubview:self.iconImageView];
 
         self.moreLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.iconImageView.left_sd - ((kScreenWidth - dockWidth) * 0.3), 0, (kScreenWidth - dockWidth) * 0.3, SYHomeCollectionViewHeaderCollectionReusableViewHeight)];
@@ -44,7 +45,6 @@
         
         self.button = [UIButton buttonWithType:UIButtonTypeCustom];
         self.button.backgroundColor = [UIColor clearColor];
-        self.button.frame = CGRectMake((kScreenWidth - dockWidth) * 0.7, 0, (kScreenWidth - dockWidth) * 0.3, SYHomeCollectionViewHeaderCollectionReusableViewHeight);
         [self.button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.button];
         
@@ -65,6 +65,13 @@
 - (void)updateTitle:(NSString *)title moreLabel:(NSString *)moreLabel{
     self.titleLabel.text = title;
     self.moreLabel.text = moreLabel;
+}
+
+- (void)layoutSubviews
+{
+    self.iconImageView.frame = CGRectMake((kScreenWidth - dockWidth) - 20, 0, 8, 40);
+    self.moreLabel.frame = CGRectMake(self.iconImageView.left_sd - ((kScreenWidth - dockWidth) * 0.3), 0, (kScreenWidth - dockWidth) * 0.3, SYHomeCollectionViewHeaderCollectionReusableViewHeight);
+    self.button.frame = CGRectMake((kScreenWidth - dockWidth) * 0.7, 0, (kScreenWidth - dockWidth) * 0.3, SYHomeCollectionViewHeaderCollectionReusableViewHeight);
 }
 
 @end

@@ -153,7 +153,7 @@ static SYAppConfig *appConfig = nil;
 //    if (![SYLoginInfoModel isLogin]) {
 //        return NO;
 //    }
-    
+    [[SYAppConfig shareInstance].selectedGuardMArr removeAllObjects];
     __block BOOL isHasLocalAccount;
     
     if (userID <= 0) {

@@ -148,9 +148,9 @@
     long long dTime = [[NSNumber numberWithDouble:time] longLongValue]; // 将double转为long long型
     [communityHttpDAO remoteUnlockWithUserName:[SYLoginInfoModel shareUserInfo].userInfoModel.username DomainSN:self.model.domain_sn WithType:@"1" WithTime:dTime Succeed:^{
         
-        [Common showAlert:@"开锁成功"];
+        [Common addAlertWithTitle:@"开锁成功"];
     } fail:^(NSError *error) {
-        [Common showAlert:[NSString stringWithFormat:@"%@",[error.userInfo objectForKey:NSLocalizedDescriptionKey]]];
+        [Common addAlertWithTitle:[NSString stringWithFormat:@"%@",[error.userInfo objectForKey:NSLocalizedDescriptionKey]]];
     }];
     
     //发送sip消息开锁

@@ -32,7 +32,7 @@
     self.sourcesMArr = [[NSMutableArray alloc] init];
     
     self.tableView = [[UITableView alloc] init];
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor redColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
@@ -107,7 +107,6 @@
         NSString *strURL = [NSString stringWithFormat:@"https://%@:%@",model.fip, model.fport];
         
         [communityHttpDAO getCanBindingWithNeiName:model.fneib_name WithUsername:[SYLoginInfoModel shareUserInfo].userInfoModel.username WithUserID:[SYLoginInfoModel shareUserInfo].userInfoModel.user_id URL:strURL Succeed:^(SYCanBindingModel *canBindingModel) {
-            
             [SYAppConfig shareInstance].secondPlatformIPStr = strURL;
             [SYAppConfig shareInstance].bindedModel = canBindingModel;
             [SYAppConfig shareInstance].bindedModel.neibor_id.fopen_mode = canBindingModel.neibor_id.fopen_mode;
